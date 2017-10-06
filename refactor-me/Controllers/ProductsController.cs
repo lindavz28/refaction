@@ -1,34 +1,40 @@
 ﻿using System;
 using System.Net;
 using System.Web.Http;
-using refactor_me.Models;
+using Models;
+using Data;
+using System.Collections.Generic;
 
 namespace refactor_me.Controllers
 {
     [RoutePrefix("products")]
     public class ProductsController : ApiController
     {
+        private ProductService _service = new ProductService();
+
         [Route]
         [HttpGet]
-        public Products GetAll()
+        public List<Product> GetAll()
         {
-            return new Products();
+            return _service.GetProducts();
         }
 
         [Route]
         [HttpGet]
-        public Products SearchByName(string name)
+        public List<Product> SearchByName(string name)
         {
-            return new Products(name);
+            return _service.GetProductsByName(name);
         }
 
         [Route("{id}")]
         [HttpGet]
         public Product GetProduct(Guid id)
         {
-            var product = new Product(id);
-            if (product.IsNew)
+            var product = _service.GetProduct(id);
+            if (product == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return product;
         }
@@ -37,34 +43,35 @@ namespace refactor_me.Controllers
         [HttpPost]
         public void Create(Product product)
         {
-            product.Save();
+            _service.Create(product);
         }
 
         [Route("{id}")]
         [HttpPut]
         public void Update(Guid id, Product product)
         {
-            var orig = new Product(id)
-            {
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                DeliveryPrice = product.DeliveryPrice
-            };
+            var existingProduct = _service.GetProduct(id);
 
-            if (!orig.IsNew)
-                orig.Save();
+            if (existingProduct != null)
+            {
+                _service.Update(product);
+            }
         }
 
         [Route("{id}")]
         [HttpDelete]
         public void Delete(Guid id)
         {
-            var product = new Product(id);
-            product.Delete();
+            // Check product exists first
+            var existingProduct = _service.GetProduct(id);
+
+            if(existingProduct != null)
+            {
+                _service.Delete(id);
+            }
         }
 
-        [Route("{productId}/options")]
+        /*[Route("{productId}/options")]
         [HttpGet]
         public ProductOptions GetOptions(Guid productId)
         {
@@ -110,6 +117,6 @@ namespace refactor_me.Controllers
         {
             var opt = new ProductOption(id);
             opt.Delete();
-        }
+        } */
     }
 }

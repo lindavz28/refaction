@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using Data;
+using System.Configuration;
+using System.Web;
+using System.Web.Http;
 
 namespace refactor_me
 {
@@ -6,6 +9,10 @@ namespace refactor_me
     {
         public static void Register(HttpConfiguration config)
         {
+            // Initialise Database
+            string strConnect = ConfigurationManager.AppSettings["DBPath"].Replace("{DataDirectory}", HttpContext.Current.Server.MapPath("~/App_Data"));
+            Database.Instance.Initialise(strConnect);
+
             // Web API configuration and services
             var formatters = GlobalConfiguration.Configuration.Formatters;
             formatters.Remove(formatters.XmlFormatter);
