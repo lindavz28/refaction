@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace Data.ProductData
 {
     public class ProductService
     {
+        /*
         // TODO: Needs injection
         private IRepository<Product> _repo = new ProductRepository();
 
@@ -42,6 +43,6 @@ namespace Data
         public bool Delete(Guid id)
         {
             return _repo.Delete(id);
-        }
+        }*/
     }
 }

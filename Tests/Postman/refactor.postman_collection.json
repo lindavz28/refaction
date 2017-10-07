@@ -1,0 +1,101 @@
+{
+	"variables": [],
+	"info": {
+		"name": "refactor",
+		"_postman_id": "02d57e81-7099-b083-1eed-57207e1bc47e",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Valid Products/Options/Id Request",
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/9e4b76ec-7461-48ea-9dcc-d39634357f69",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products/{productid}/options/{optionid}"
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid Products/Options/Id request",
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/729017d9-ef11-4734-8f50-d1fdae08bb79",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products/{productid}/options/{optionid}"
+			},
+			"response": []
+		},
+		{
+			"name": "Valid Products/Options Request",
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products/{productid}/options"
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Products/Option",
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"{{$guid}}\",\r\n  \"Name\": \"New Inserted Item - {{$timestamp}}\",\r\n  \"Description\": \"New Description\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - Products/Option",
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/729017d9-ef11-4734-8f50-d1fdae08bb79",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT - Products/Option",
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/01234567-89ab-cdef-0123-456789abcdef",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\r\n  \"Name\": \"Product name\",\r\n  \"Description\": \"Product description\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

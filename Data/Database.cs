@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 
 namespace Data
 {
@@ -26,12 +26,12 @@ namespace Data
             }
         }
 
-        public SqlConnection Connection
+        public SQLiteConnection Connection
         {
             get { return _sqlConnection; }
         }
 
-        SqlConnection _sqlConnection = null;
+        SQLiteConnection _sqlConnection = null;
         
         
         public void Initialise(string connectionString)
@@ -40,7 +40,7 @@ namespace Data
             {
                 if (!string.IsNullOrEmpty(connectionString))
                 {
-                    _sqlConnection = new SqlConnection(connectionString);
+                    _sqlConnection = new SQLiteConnection(connectionString);
                 }
             }            
         }

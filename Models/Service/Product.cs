@@ -1,23 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models
 {
-    public class ProductDto
-    {
-        public Guid Id { get; set; }
-
-        public string Name { get; set; }
-    }
-
+    // Production class used for saving/getting data from the SqlLiteDatabase
+    // Using string for Guid as SqlLite DB isn't handling Guid type properly
     public class Product
     {
-        public Guid Id { get; set; }
-
-        public Guid ProductId { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 

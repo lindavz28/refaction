@@ -2,10 +2,11 @@
 using Models;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using Dapper;
 
-namespace Data
+namespace Data.ProductData
 {
-    public class ProductRepository : IRepository<Product>
+    /*public class ProductRepository : IRepository<Product>
     {
         public bool Save(Product product)
         {
@@ -158,5 +159,5 @@ namespace Data
             };
         }
 
-    }
+    }*/
 }
