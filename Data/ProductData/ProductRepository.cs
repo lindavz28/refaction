@@ -1,56 +1,42 @@
 ﻿using System;
 using Models;
-using System.Data.SqlClient;
 using System.Collections.Generic;
-using Dapper;
+using Data.Extensions;
+using Data.Exceptions;
+using System.Linq;
 
 namespace Data.ProductData
 {
-    /*public class ProductRepository : IRepository<Product>
+    public class ProductRepository : IProductRepository
     {
+
         public bool Save(Product product)
         {
             try
             {
-                using (var conn = Database.Instance.Connection)
-                {
-                    // TODO these need to be using Dapper
-                    using (var cmd = new SqlCommand($"insert into product (id, name, description, price, deliveryprice) values ('"+
-                            "{product.Id}', '{product.Name}', '{product.Description}', {product.Price},"+
-                            "{product.DeliveryPrice})", conn))
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                }
+                var conn = Database.Instance.Connection;
+                var rowsUpdated = conn.ExecuteNonQuery($"insert into product (id, name, description, price, deliveryprice) values ('{product.Id}', '{product.Name}', '{product.Description}', {product.Price},{product.DeliveryPrice})");
+                return rowsUpdated > 0;
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO : log an exception
-                return false;
+                // Log exception
+                throw new ProductDatabaseException($"Exception trying to save Product Name '{product.Name}'", ex);
             }
-
-            return true;
         }
 
         public bool Update(Product product)
         {
             try
             {
-                using (var conn = Database.Instance.Connection)
-                {
-                    using (var cmd = new SqlCommand($"update product set name = '{product.Name}', description = '{product.Description}', price = {product.Price}, deliveryprice = {product.DeliveryPrice} where id = '{product.Id}'", conn))
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                return true;
+                var conn = Database.Instance.Connection;
+                var rowsUpdated = conn.ExecuteNonQuery($"update product set name = '{product.Name}', description = '{product.Description}', price = {product.Price}, deliveryprice = {product.DeliveryPrice} where id = '{product.Id}'");
+                return rowsUpdated > 0;
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO : log an exception
-                return false;
+                // Log exception
+                throw new ProductDatabaseException($"Exception trying to update Product with Product ID '{product.Id}' and Name '{product.Name}'", ex);
             }
         }
 
@@ -59,105 +45,61 @@ namespace Data.ProductData
             try
             {
                 var conn = Database.Instance.Connection;
-                conn.Open();
-                var cmd = new SqlCommand($"delete from product where id = '{id}'", conn);
-                cmd.ExecuteReader();
-
-                return true;
+                var rowsUpdated = conn.ExecuteNonQuery($"delete from product where id = '{id}'");
+                return rowsUpdated > 0;
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO : log an exception
-                return false;
+                // Log exception
+                throw new ProductDatabaseException($"Exception trying to delete Product with Product Option ID '{id}'", ex);
             }
         }
 
-        public Product GetItem(Guid id)
+        public IEnumerable<Product> GetAllProducts()
         {
             try
             {
                 var conn = Database.Instance.Connection;
-                var cmd = new SqlCommand($"select * from product where id = '{id}'", conn);
-                conn.Open();
-
-                using (var rdr = cmd.ExecuteReader())
-                {
-                    if (!rdr.Read())
-                        return null;
-
-                    return ReadProduct(rdr);
-                }
+                return conn.ExecuteQuery<Product>($"select * from product");
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO : log an exception
-                return null;
+                // Log exception
+                throw new ProductDatabaseException($"Exception trying to get all Products", ex);
             }
         }
 
-        public List<Product> GetAllItems()
+        public Product GetProduct(Guid id)
         {
             try
             {
-                var items = new List<Product>();
                 var conn = Database.Instance.Connection;
-                var cmd = new SqlCommand($"select * from product", conn);
-                conn.Open();
 
-                using (var rdr = cmd.ExecuteReader())
-                {
-                    while (rdr.Read())
-                    {
-                        items.Add(ReadProduct(rdr));
-                    }
+                var items = conn.ExecuteQuery<Product>($"select * from product where id = '{id}'");
 
-                    return items;
-                }
+                return items.FirstOrDefault();
+
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO : log an exception
-                return null;
+                // Log exception
+                throw new ProductDatabaseException($"Exception trying to get Product with Product ID '{id}'", ex);
             }
         }
-
-        public List<Product> GetItemsByName(string name)
+      
+        public IEnumerable<Product> GetProductsByName(string name)
         {
+
             try
             {
-                var items = new List<Product>();
                 var conn = Database.Instance.Connection;
-                var cmd = new SqlCommand($"select * from product where lower(name) like '%{name.ToLower()}%'", conn);
-                conn.Open();
-
-                using (var rdr = cmd.ExecuteReader())
-                {
-                    while (rdr.Read())
-                    {
-                        items.Add(ReadProduct(rdr));
-                    }
-
-                    return items;
-                }
+                return conn.ExecuteQuery<Product>($"select * from product where lower(name) like '%{name.ToLower()}%'");
             }
-            catch
+            catch (Exception ex)
             {
-                // TODO : log an exception
-                return null;
+                // Log exception
+                throw new ProductDatabaseException($"Exception trying to get all Products by name '{name}'", ex);
             }
         }
-
-        private Product ReadProduct(SqlDataReader rdr)
-        {
-            return new Product()
-            {
-                Id = Guid.Parse(rdr["Id"].ToString()),
-                Name = rdr["Name"].ToString(),
-                Description = (DBNull.Value == rdr["Description"]) ? null : rdr["Description"].ToString(),
-                Price = decimal.Parse(rdr["Price"].ToString()),
-                DeliveryPrice = decimal.Parse(rdr["DeliveryPrice"].ToString())
-            };
-        }
-
-    }*/
+    }
 }

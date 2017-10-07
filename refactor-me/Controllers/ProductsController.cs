@@ -2,9 +2,9 @@
 using System.Web.Http;
 using Models;
 using Data.ProductData;
-using Data.ProductOptionData;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
+using Data.Exceptions;
+using System.Net.Http;
 
 namespace refactor_me.Controllers
 {
@@ -12,109 +12,118 @@ namespace refactor_me.Controllers
     public class ProductsController : ApiController
     {
         private ProductService _productService = new ProductService();
-        private ProductOptionService _optionService = new ProductOptionService();
 
         [Route]
         [HttpGet]
-        public List<Product> GetAll()
+        public HttpResponseMessage GetAll()
         {
-            return null;
-            //return _service.GetProducts();
-        }
-
-        [Route]
-        [HttpGet]
-        public List<Product> SearchByName(string name)
-        {
-            return null;
-            //return _service.GetProductsByName(name);
-        }
-
-        [Route("{id}")]
-        [HttpGet]
-        public Product GetProduct(Guid id)
-        {
-            return null;
-            /*var product = _service.GetProduct(id);
-            if (product == null)
+            try
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+                var products = _productService.GetAllProducts();
 
-            return product;*/
+                if (products == null)
+                    return Request.NotFound();
+
+                return Request.CreateResponse(HttpStatusCode.OK, products);
+            }
+            catch (Exception e)
+            {
+                return Request.Error(e.Message);
+            }
+        }
+
+        [Route]
+        [HttpGet]
+        public HttpResponseMessage SearchByName(string name)
+        {
+            try
+            { 
+                var products = _productService.GetAllProductsByName(name);
+
+                if (products == null)
+                    return Request.NotFound();
+
+                return Request.CreateResponse(HttpStatusCode.OK, products);
+            }
+            catch (Exception e)
+            {
+                return Request.Error(e.Message);
+            }
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public HttpResponseMessage GetProduct(Guid id)
+        {
+            try
+            {
+                var product = _productService.GetProduct(id);
+
+                if (product == null)
+                    return Request.NotFound(id);
+
+                return Request.CreateResponse(HttpStatusCode.OK, product);
+            }
+            catch(Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
         }
 
         [Route]
         [HttpPost]
-        public void Create(Product product)
+        public HttpResponseMessage Create(Product product)
         {
-            //_service.Create(product);
+            try
+            {
+                _productService.Create(product);
+                return Request.CreateResponse(HttpStatusCode.Created);
+            }
+            catch(Exception e)
+            {
+                return Request.Error(e.Message);
+            }
         }
-
+                
         [Route("{id}")]
         [HttpPut]
-        public void Update(Guid id, Product product)
+        public HttpResponseMessage Update(Guid id, Product product)
         {
-            //var existingProduct = _service.GetProduct(id);
+            try
+            {
+                var updated = _productService.Update(product);
+                if (updated)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NoContent);
+                }
 
-            //if (existingProduct != null)
-            //{
-            //    _service.Update(product);
-            //}
+                // Nothing changed
+                return Request.NotFound(id);
+            }
+            catch (Exception e)
+            {
+                return Request.Error(e.Message);
+            }
         }
 
         [Route("{id}")]
         [HttpDelete]
-        public void Delete(Guid id)
+        public HttpResponseMessage Delete(Guid id)
         {
-            //// Check product exists first
-            //var existingProduct = _service.GetProduct(id);
+            try
+            {
+                var updated = _productService.Delete(id);
+                if (updated)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NoContent);
+                }
 
-            //if(existingProduct != null)
-            //{
-            //    _service.Delete(id);
-            //}
-        }
-
-
-        // TODO: Move options into ProductOptionController?
-        [Route("{productId}/options")]
-        [HttpGet]
-        public ProductOptions GetOptions(Guid productId)
-        {
-            // Get product options and map to ProductOptionDto
-            return _optionService.GetProductOptions(productId);
-        }
-
-        [Route("{productId}/options/{id}")]
-        [HttpGet]
-        public ProductOptionDto GetOption(Guid productId, Guid id)
-        {
-            // Original code I believe has a bug - it has both productId and Id but only uses Id.
-            // In original ProductOption class it assumes the id is ProductId.
-            // Updated to use both, and ensure that both productId and Id are correct.
-            return _optionService.GetOptionForProduct(productId, id);
-        }
-
-        [Route("{productId}/options")]
-        [HttpPost]
-        public void CreateOption(Guid productId, ProductOption option)
-        {
-            _optionService.Create(productId, option);
-        }
-
-        [Route("{productId}/options/{id}")]
-        [HttpPut]
-        public void UpdateOption(Guid productId, ProductOption option)
-        {
-            _optionService.Update(productId, option);
-        }
-
-        [Route("{productId}/options/{id}")]
-        [HttpDelete]
-        public void DeleteOption(Guid productId, Guid id)
-        {
-            _optionService.Delete(productId, id);
+                return Request.NotFound(id);
+            }
+            catch (Exception e)
+            {
+                return Request.Error(e.Message);
+            }
         }
 
        

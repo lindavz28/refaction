@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Models
 {
-    public class ProductOptions
+    public class ProductOptionsDto
     {
         public List<ProductOptionDto> Items { get; set; }
     }

@@ -9,9 +9,9 @@ namespace Data
         bool Save(Product entity);
         bool Update(Product entity);
         bool Delete(Guid id);
-        Product GetItem(Guid id);
-        IEnumerable<Product> GetAllItems();
-        IEnumerable<Product> GetItemsByName(string name);
+        Product GetProduct(Guid id);
+        IEnumerable<Product> GetAllProducts();
+        IEnumerable<Product> GetProductsByName(string name);
     }
 
 }

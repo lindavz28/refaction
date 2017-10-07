@@ -17,9 +17,9 @@ namespace Data.ProductOptionData
         }
 
         // Returns a number of product options for a particular productId
-        public ProductOptions GetProductOptions(Guid productId)
+        public ProductOptionsDto GetProductOptions(Guid productId)
         {
-            return new ProductOptions()
+            return new ProductOptionsDto()
                 {
                     Items = _repo.GetAllItemsForProduct(productId)
                         .Select((option) => MapProductOptionToDto(option))
@@ -30,6 +30,11 @@ namespace Data.ProductOptionData
         // Create a product option
         public bool Create(Guid productId, ProductOption productOption)
         {
+            // Check if item exists already
+            if (_repo.GetItemForProduct(productId, new Guid(productOption.Id)) != null)
+            {
+                return false;
+            }
             return _repo.Save(productId, productOption);
         }
 
@@ -48,6 +53,9 @@ namespace Data.ProductOptionData
         // TODO: Do this with a mapping library
         private ProductOptionDto MapProductOptionToDto(ProductOption productOption)
         {
+            if (productOption == null)
+                return null;
+
             return new ProductOptionDto()
             {
                 Id = new Guid(productOption.Id),

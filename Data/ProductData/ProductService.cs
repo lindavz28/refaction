@@ -9,40 +9,75 @@ namespace Data.ProductData
 {
     public class ProductService
     {
-        /*
-        // TODO: Needs injection
-        private IRepository<Product> _repo = new ProductRepository();
+        // Needs injection
+        private IProductRepository _repo = new ProductRepository();
 
-        public List<Product> Items { get; private set; }
-
-        public Product GetProduct(Guid guid)
+        // Returns a product option with this id
+        public ProductDto GetProduct(Guid id)
         {
-            return _repo.GetItem(guid);
+            return MapProductToDto(_repo.GetProduct(id));
         }
 
-        public List<Product> GetProducts()
+        // Returns all Products
+        public ProductsDto GetAllProducts()
         {
-            return _repo.GetAllItems();
+            return new ProductsDto()
+            {
+                Items = _repo.GetAllProducts()
+                        .Select((product) => MapProductToDto(product))
+                        .ToList()
+            };
         }
 
-        public List<Product> GetProductsByName(string name)
+        // Returns all Products
+        public ProductsDto GetAllProductsByName(string name)
         {
-            return _repo.GetItemsByName(name);
+            return new ProductsDto()
+            {
+                Items = _repo.GetProductsByName(name)
+                        .Select((product) => MapProductToDto(product))
+                        .ToList()
+            };
         }
 
+        // Create a product
         public bool Create(Product product)
         {
+            // Check if item exists already
+            if (_repo.GetProduct(new Guid(product.Id)) != null)
+            {
+                return false;
+            }
             return _repo.Save(product);
         }
 
+        // Update an existing product option only
         public bool Update(Product product)
         {
             return _repo.Update(product);
         }
 
+        // Delete a product option by its ID
         public bool Delete(Guid id)
         {
             return _repo.Delete(id);
-        }*/
+        }
+
+        // TODO: Do this with a mapping library
+        private ProductDto MapProductToDto(Product product)
+        {
+            if (product == null)
+                return null;
+
+            return new ProductDto()
+            {
+                Id = new Guid(product.Id),
+                Name = product.Name,
+                Description = product.Description,
+                DeliveryPrice = product.DeliveryPrice,
+                Price = product.Price
+
+            };
+        }
     }
 }

@@ -40,12 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\ProductDto.cs" />
-    <Compile Include="Service\Products.cs" />
-    <Compile Include="Service\Product.cs" />
-    <Compile Include="Database\ProductOptionDto.cs" />
-    <Compile Include="Service\ProductOptions.cs" />
-    <Compile Include="Service\ProductOption.cs" />
+    <Compile Include="Service\ProductDto.cs" />
+    <Compile Include="Service\ProductsDto.cs" />
+    <Compile Include="Database\Product.cs" />
+    <Compile Include="Service\ProductOptionDto.cs" />
+    <Compile Include="Service\ProductOptionsDto.cs" />
+    <Compile Include="Database\ProductOption.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

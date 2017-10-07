@@ -7,7 +7,6 @@ namespace Models
     // Using string for Guid as SqlLite DB isn't handling Guid type properly
     public class ProductOption
     {
-        // [Optional]??
         public string Id { get; set; }
 
         public string ProductId { get; set; }

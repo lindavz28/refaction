@@ -76,17 +76,8 @@ namespace Data.ProductOptionData
                 
                 var items = conn.ExecuteQuery<ProductOption>($"select * from productoption where productid = '{productId}' and id = '{optionId}'");
 
-                if (!items.Any())
-                {
-                    throw new ProductOptionNotFoundException($"Product Option with Product ID '{productId}' and Product Option ID '{optionId}' not found ");
-                }
-
                 return items.FirstOrDefault();
                 
-            }
-            catch(ProductOptionNotFoundException e)
-            {
-                throw e;
             }
             catch (Exception ex)
             {
