@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Data.Extensions;
 using System.Linq;
 using Data.Exceptions;
+using Dapper;
 
 namespace Data.ProductOptionData
 {
@@ -14,7 +15,15 @@ namespace Data.ProductOptionData
             try
             {
                 var conn = Database.Instance.Connection;
-                var rowsUpdated = conn.ExecuteNonQuery($"insert into productoption (id, productid, name, description) values ('{product.Id}', '{productId}', '{product.Name}', '{product.Description}')");
+
+                var rowsUpdated = conn.ExecuteNonQuery("insert into productoption (id, productid, name, description) values (@Id, @ProductId, @Name, @Description)",
+                    new
+                    {
+                        Id = product.Id.ToString(),
+                        ProductId = productId.ToString(),
+                        product.Name,
+                        product.Description
+                    });
                 return rowsUpdated > 0;
             }
             catch(Exception ex)
@@ -29,7 +38,14 @@ namespace Data.ProductOptionData
             try
             {
                 var conn = Database.Instance.Connection;
-                var rowsUpdated = conn.ExecuteNonQuery($"update productoption set name = '{product.Name}', description = '{product.Description}' where id = '{product.Id}' and productId = '{productId}'");
+                var rowsUpdated = conn.ExecuteNonQuery("update productoption set name = @Name, description = @Description where id = @Id and productId = @ProductId",
+                    new
+                    {
+                        product.Name,
+                        product.Description,
+                        Id = product.Id.ToString(),
+                        ProductId = productId.ToString()
+                    });
                 return rowsUpdated > 0;
             }
             catch (Exception ex)
@@ -44,7 +60,12 @@ namespace Data.ProductOptionData
             try
             {
                 var conn = Database.Instance.Connection;
-                var rowsUpdated = conn.ExecuteNonQuery($"delete from productoption where id = '{id}' and productid = '{productId}'");
+                var rowsUpdated = conn.ExecuteNonQuery("delete from productoption where id = @Id and productid = @ProductId",
+                    new
+                    {
+                        Id = id.ToString(),
+                        ProductId = productId.ToString()
+                    });
                 return rowsUpdated > 0;
             }
             catch (Exception ex)
@@ -59,7 +80,8 @@ namespace Data.ProductOptionData
             try
             {
                 var conn = Database.Instance.Connection;
-                return conn.ExecuteQuery<ProductOption>($"select * from productoption where productid = '{productId}'");
+                return conn.ExecuteQuery<ProductOption>("select * from productoption where productid = @ProductId",
+                    new { ProductId = productId.ToString() });
             }
             catch (Exception ex)
             {
@@ -73,8 +95,13 @@ namespace Data.ProductOptionData
             try
             {
                 var conn = Database.Instance.Connection;
-                
-                var items = conn.ExecuteQuery<ProductOption>($"select * from productoption where productid = '{productId}' and id = '{optionId}'");
+
+                var items = conn.ExecuteQuery<ProductOption>("select * from productoption where productid = @ProductId and Id = @id",
+                    new
+                    {
+                        ProductId = productId.ToString(),
+                        Id = optionId.ToString()
+                    });
 
                 return items.FirstOrDefault();
                 

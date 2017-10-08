@@ -10,7 +10,7 @@ namespace Data.Extensions
     public static class SqlLiteExtensions
     {
 
-        public static int ExecuteNonQuery( this SQLiteConnection connection, string commandText)
+        public static int ExecuteNonQuery( this SQLiteConnection connection, string commandText, object param = null)
         {
             // Ensure we have a connection
             // Previously I've done validation using a method attribute but this is quicker for this assignment
@@ -30,12 +30,12 @@ namespace Data.Extensions
             }
 
             // Use Dapper to execute the command
-            connection.Execute(commandText);
+            connection.Execute(commandText, param);
 
             return connection.Changes;
         }
 
-        public static IEnumerable<T> ExecuteQuery<T>(this SQLiteConnection connection, string queryText)
+        public static IEnumerable<T> ExecuteQuery<T>(this SQLiteConnection connection, string queryText, object param = null)
         {
             // Ensure we have a connection
             if (connection == null)
@@ -54,7 +54,7 @@ namespace Data.Extensions
             }
 
             // Use Dapper to execute the given query
-            return connection.Query<T>(queryText);
+            return connection.Query<T>(queryText, param );
         }
     }
 }

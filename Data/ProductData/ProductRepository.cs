@@ -15,7 +15,15 @@ namespace Data.ProductData
             try
             {
                 var conn = Database.Instance.Connection;
-                var rowsUpdated = conn.ExecuteNonQuery($"insert into product (id, name, description, price, deliveryprice) values ('{product.Id}', '{product.Name}', '{product.Description}', {product.Price},{product.DeliveryPrice})");
+                var rowsUpdated = conn.ExecuteNonQuery("insert into product (id, name, description, price, deliveryprice) values (@Id, @Name, @Description, @Price, @DeliveryPrice)",
+                    new
+                    {
+                        Id = product.Id.ToString(),
+                        product.Name,
+                        product.Description,
+                        product.Price,
+                        product.DeliveryPrice
+                    });
                 return rowsUpdated > 0;
             }
             catch (Exception ex)
@@ -30,7 +38,15 @@ namespace Data.ProductData
             try
             {
                 var conn = Database.Instance.Connection;
-                var rowsUpdated = conn.ExecuteNonQuery($"update product set name = '{product.Name}', description = '{product.Description}', price = {product.Price}, deliveryprice = {product.DeliveryPrice} where id = '{product.Id}'");
+                var rowsUpdated = conn.ExecuteNonQuery("update product set name = @Name, description = @Description, price = @Price, deliveryprice = @DeliveryPrice where id = @Id",
+                    new
+                    {
+                        Id = product.Id.ToString(),
+                        product.Name,
+                        product.Description,
+                        product.Price,
+                        product.DeliveryPrice
+                    });
                 return rowsUpdated > 0;
             }
             catch (Exception ex)
@@ -45,7 +61,8 @@ namespace Data.ProductData
             try
             {
                 var conn = Database.Instance.Connection;
-                var rowsUpdated = conn.ExecuteNonQuery($"delete from product where id = '{id}'");
+                var rowsUpdated = conn.ExecuteNonQuery("delete from product where id = @Id",
+                    new { Id = id.ToString() });
                 return rowsUpdated > 0;
             }
             catch (Exception ex)
@@ -60,7 +77,7 @@ namespace Data.ProductData
             try
             {
                 var conn = Database.Instance.Connection;
-                return conn.ExecuteQuery<Product>($"select * from product");
+                return conn.ExecuteQuery<Product>("select * from product");
             }
             catch (Exception ex)
             {
@@ -75,7 +92,8 @@ namespace Data.ProductData
             {
                 var conn = Database.Instance.Connection;
 
-                var items = conn.ExecuteQuery<Product>($"select * from product where id = '{id}'");
+                var items = conn.ExecuteQuery<Product>("select * from product where id = @Id",
+                    new { Id = id.ToString() });
 
                 return items.FirstOrDefault();
 
@@ -93,7 +111,10 @@ namespace Data.ProductData
             try
             {
                 var conn = Database.Instance.Connection;
-                return conn.ExecuteQuery<Product>($"select * from product where lower(name) like '%{name.ToLower()}%'");
+                var encodeLike = "%" + name.ToLower() + "%";
+
+                return conn.ExecuteQuery<Product>("select * from product where lower(name) like @Name",
+                    new { Name = name });
             }
             catch (Exception ex)
             {

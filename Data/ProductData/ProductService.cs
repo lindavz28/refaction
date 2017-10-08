@@ -9,7 +9,6 @@ namespace Data.ProductData
 {
     public class ProductService
     {
-        // Needs injection
         private IProductRepository _repo;
 
         public ProductService(IProductRepository repo)

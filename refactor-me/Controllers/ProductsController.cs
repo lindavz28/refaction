@@ -86,7 +86,7 @@ namespace refactor_me.Controllers
                 if(_productService.Create(product) )
                     return Request.CreateResponse(HttpStatusCode.Created);
 
-                return Request.CreateResponse(HttpStatusCode.NoContent, $"Product with Product ID '{product.Id}' already exists");
+                return Request.CreateResponse(HttpStatusCode.NotModified, $"Product with Product ID '{product.Id}' already exists");
             }
             catch(Exception e)
             {
