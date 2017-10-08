@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Data
 {
-    interface IProductRepository
+    public interface IProductRepository
     {
         bool Save(Product entity);
         bool Update(Product entity);

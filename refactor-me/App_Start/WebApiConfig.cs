@@ -1,5 +1,9 @@
-﻿using Data;
+﻿using Autofac;
+using Data;
+using Data.ProductData;
+using Data.ProductOptionData;
 using System.Configuration;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 
@@ -7,6 +11,8 @@ namespace refactor_me
 {
     public static class WebApiConfig
     {
+
+
         public static void Register(HttpConfiguration config)
         {
             // Initialise Database

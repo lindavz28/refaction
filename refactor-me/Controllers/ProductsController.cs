@@ -5,13 +5,20 @@ using Data.ProductData;
 using System.Net;
 using Data.Exceptions;
 using System.Net.Http;
+using Autofac.Integration.WebApi;
 
 namespace refactor_me.Controllers
 {
     [RoutePrefix("products")]
+    [AutofacControllerConfiguration]
     public class ProductsController : ApiController
     {
-        private ProductService _productService = new ProductService();
+        private ProductService _productService;
+
+        public ProductsController(ProductService service)
+        {
+            _productService = service;
+        }
 
         [Route]
         [HttpGet]

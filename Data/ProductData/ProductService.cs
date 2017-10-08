@@ -10,7 +10,12 @@ namespace Data.ProductData
     public class ProductService
     {
         // Needs injection
-        private IProductRepository _repo = new ProductRepository();
+        private IProductRepository _repo;
+
+        public ProductService(IProductRepository repo)
+        {
+            _repo = repo;
+        }
 
         // Returns a product option with this id
         public ProductDto GetProduct(Guid id)

@@ -7,9 +7,13 @@ namespace Data.ProductOptionData
 {
     public class ProductOptionService
     {
-        // TODO: Needs injection
-        private IProductOptionRepository _repo = new ProductOptionRepository();
+        private IProductOptionRepository _repo;
 
+        public ProductOptionService(IProductOptionRepository repo)
+        {
+            _repo = repo;
+        }
+       
         // Returns a product option with this id
         public ProductOptionDto GetOptionForProduct(Guid productOption, Guid optionId)
         {

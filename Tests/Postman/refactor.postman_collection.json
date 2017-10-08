@@ -167,7 +167,7 @@
 			"response": []
 		},
 		{
-			"name": "Test Assert - Item has been updated",
+			"name": "Test Assert - Option has been updated",
 			"event": [
 				{
 					"listen": "test",
@@ -449,9 +449,46 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"Id\": \"22234567-89ab-cdef-0123-456789abcdff\",\r\n  \"Name\": \"Update Product name\",\r\n  \"Description\": \"Update Product description2\",\r\n  \"Price\" : 1.50,\r\n  \"PriceDelivery\" : 2.25\r\n}"
+					"raw": "{\r\n  \"Id\": \"22234567-89ab-cdef-0123-456789abcdff\",\r\n  \"Name\": \"Update Product name\",\r\n  \"Description\": \"Update Product description2\",\r\n  \"Price\" : 1.50,\r\n  \"DeliveryPrice\" : 2.25\r\n}"
 				},
 				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Test Assert - Product has been updated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"pm.test(\"Name is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"Product name1\");",
+							"});",
+							"",
+							"pm.test(\"Description is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Description).to.eql(\"Product description2\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/22234567-89ab-cdef-0123-456789abcdff",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products/{productid}/options"
 			},
 			"response": []
 		},

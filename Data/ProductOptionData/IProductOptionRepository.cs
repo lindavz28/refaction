@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Data
 {
-    interface IProductOptionRepository
+    public interface IProductOptionRepository
     {
         bool Save(Guid productId, ProductOption entity);
         bool Update(Guid productId, ProductOption entity);
