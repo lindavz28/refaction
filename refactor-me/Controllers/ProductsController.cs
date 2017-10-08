@@ -3,7 +3,6 @@ using System.Web.Http;
 using Models;
 using Data.ProductData;
 using System.Net;
-using Data.Exceptions;
 using System.Net.Http;
 using Autofac.Integration.WebApi;
 

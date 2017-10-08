@@ -2,7 +2,6 @@
 using System.Web.Http;
 using Models;
 using Data.ProductOptionData;
-using Data.Exceptions;
 using System.Net.Http;
 using System.Net;
 using Autofac.Integration.WebApi;

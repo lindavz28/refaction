@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Data.Extensions;
 using System.Linq;
 using Data.Exceptions;
-using Dapper;
 
 namespace Data.ProductOptionData
 {
