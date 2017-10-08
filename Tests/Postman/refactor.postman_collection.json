@@ -8,7 +8,33 @@
 	},
 	"item": [
 		{
-			"name": "Valid Products/Options/Id Request",
+			"name": "GET - Products/Options/Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"9e4b76ec-7461-48ea-9dcc-d39634357f69\");",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Blue Mat\");",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Deep blue standing mat\");",
+							"});"
+						]
+					}
+				}
+			],
 			"request": {
 				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/9e4b76ec-7461-48ea-9dcc-d39634357f69",
 				"method": "GET",
@@ -19,7 +45,20 @@
 			"response": []
 		},
 		{
-			"name": "Invalid Products/Options/Id request",
+			"name": "GET Invalid OptionsId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						]
+					}
+				}
+			],
 			"request": {
 				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/729017d9-ef11-4734-8f50-d1fdae08bb79",
 				"method": "GET",
@@ -30,7 +69,7 @@
 			"response": []
 		},
 		{
-			"name": "Valid Products/Options Request",
+			"name": "GET Products/Options",
 			"request": {
 				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options",
 				"method": "GET",
@@ -41,7 +80,21 @@
 			"response": []
 		},
 		{
-			"name": "POST - Products/Option",
+			"name": "POST - products/option",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful POST\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						]
+					}
+				}
+			],
 			"request": {
 				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options",
 				"method": "POST",
@@ -61,9 +114,112 @@
 			"response": []
 		},
 		{
-			"name": "DELETE - Products/Option",
+			"name": "Test Setup - Create Option",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						]
+					}
+				}
+			],
 			"request": {
-				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/729017d9-ef11-4734-8f50-d1fdae08bb79",
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"11234567-89ab-cdef-0123-456789abcdff\",\r\n  \"Name\": \"New Inserted Item - {{$timestamp}}\",\r\n  \"Description\": \"New Description\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT - Products/Option",
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/11234567-89ab-cdef-0123-456789abcdff",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"11234567-89ab-cdef-0123-456789abcdff\",\r\n  \"Name\": \"Product name1\",\r\n  \"Description\": \"Product description2\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Test Assert - Item has been updated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"pm.test(\"Name is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Name).to.eql(\"Product name1\");",
+							"});",
+							"",
+							"pm.test(\"Description is updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Description).to.eql(\"Product description2\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/11234567-89ab-cdef-0123-456789abcdff",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products/{productid}/options"
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - Products/Option",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"204 No Content for deletion\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/11234567-89ab-cdef-0123-456789abcdff",
 				"method": "DELETE",
 				"header": [
 					{
@@ -78,9 +234,211 @@
 			"response": []
 		},
 		{
-			"name": "PUT - Products/Option",
+			"name": "GET - All Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
 			"request": {
-				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79/options/01234567-89ab-cdef-0123-456789abcdef",
+				"url": "http://localhost:58123/products",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products\n"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Products by Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://localhost:58123/products?name=Fidget",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "58123",
+					"path": [
+						"products"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Fidget",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products\n"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb79",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products/{productid}\n"
+			},
+			"response": []
+		},
+		{
+			"name": "GET - Invalid Product ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/729017d9-ef11-4734-8f50-d1fdae08bb88",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "products/{productid}\n"
+			},
+			"response": []
+		},
+		{
+			"name": "POST - Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"{{$guid}}\",\r\n  \"Name\": \"Product name\",\r\n  \"Description\": \"Product description\",\r\n  \"Price\": 123.45,\r\n  \"DeliveryPrice\": 12.34\r\n}"
+				},
+				"description": "Insert with hardcoded value 11234567-89ab-cdef-0123-456789abcdff"
+			},
+			"response": []
+		},
+		{
+			"name": "Test Setup - Create Product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"Id\": \"22234567-89ab-cdef-0123-456789abcdff\",\r\n  \"Name\": \"New Product Name\",\r\n  \"Description\": \"New Product description\",\r\n  \"Price\": 123.45,\r\n  \"DeliveryPrice\": 12.34\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT - Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/22234567-89ab-cdef-0123-456789abcdff",
 				"method": "PUT",
 				"header": [
 					{
@@ -91,8 +449,85 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"Id\": \"01234567-89ab-cdef-0123-456789abcdef\",\r\n  \"Name\": \"Product name\",\r\n  \"Description\": \"Product description\"\r\n}"
+					"raw": "{\r\n  \"Id\": \"22234567-89ab-cdef-0123-456789abcdff\",\r\n  \"Name\": \"Update Product name\",\r\n  \"Description\": \"Update Product description2\",\r\n  \"Price\" : 1.50,\r\n  \"PriceDelivery\" : 2.25\r\n}"
 				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - Products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/22234567-89ab-cdef-0123-456789abcdff",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - Attempt Delete Twice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 404 - not found\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:58123/products/11234567-89ab-cdef-0123-456789abcdff",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE - Invalid Product ID",
+			"request": {
+				"url": "http://localhost:58123/products/11234567",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {},
 				"description": ""
 			},
 			"response": []

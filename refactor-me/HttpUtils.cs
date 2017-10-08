@@ -18,7 +18,7 @@ namespace refactor_me
 
         public static HttpResponseMessage NotFound(this HttpRequestMessage request, Guid id)
         {
-            return request.CreateResponse(HttpStatusCode.NotFound, $"Product or Option with ID $'{id}' not found");
+            return request.CreateResponse(HttpStatusCode.NotFound, $"Product or Option with ID '{id}' not found");
         }
 
         public static HttpResponseMessage NotFound(this HttpRequestMessage request)

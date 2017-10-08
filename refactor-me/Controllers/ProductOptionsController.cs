@@ -62,8 +62,10 @@ namespace refactor_me.Controllers
         {
             try
             {
-                _optionService.Create(productId, option);
-                return Request.CreateResponse(HttpStatusCode.Created);
+                if ( _optionService.Create(productId, option) )
+                    return Request.CreateResponse(HttpStatusCode.Created);
+
+                return Request.CreateResponse(HttpStatusCode.NoContent, $"Product with Product ID '{productId}' and Option ID '{option.Id}' already exist");
             }
             catch (Exception e)
             {
